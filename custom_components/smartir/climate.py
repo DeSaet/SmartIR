@@ -70,7 +70,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
                         "try to download it from the GitHub repo.")
 
         try:
-            codes_source = ("https://raw.githubusercontent.com/"
+            codes_source = (#"https://raw.githubusercontent.com/"
                             "smartHomeHub/SmartIR/master/"
                             "codes/climate/{}.json")
 
