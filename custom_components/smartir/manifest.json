@@ -3,7 +3,7 @@
   "name": "SmartIR",
   "documentation": "https://github.com/DeSaet/SmartIR",
   "dependencies": [],
-  "codeowners": ["@smartHomeHub"],
+  "codeowners": ["@DeSaet"],
   "requirements": ["aiofiles>=0.6.0"],
   "homeassistant": "2025.5.0",
   "version": "1.18.1",
