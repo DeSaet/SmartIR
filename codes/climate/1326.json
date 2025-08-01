@@ -1,6 +1,6 @@
 {
-  "manufacturer": "Haier",
-  "supportedModels": [
+  "manufacturer":"Haier",
+  "supportedModels":[
     "HSU-07HPL103/R3"
   ],
   "supportedController": "MQTT",
