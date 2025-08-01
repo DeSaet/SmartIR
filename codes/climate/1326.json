@@ -1,7 +1,7 @@
 {
   "manufacturer":"Haier",
   "supportedModels":[
-    "HSU-07HPL103/R3"
+    "HSU-07HPL103/R3_HSU-07HTDN03/R2"
   ],
   "supportedController": "MQTT",
   "commandsEncoding": "Raw",
