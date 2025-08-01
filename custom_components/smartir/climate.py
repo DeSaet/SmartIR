@@ -363,42 +363,39 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             await self.async_set_hvac_mode(self._operation_modes[1])
 
     async def send_command(self):
-		async with self._temp_lock:
-			try:
-				self._on_by_remote = False
-				operation_mode = self._hvac_mode
-				fan_mode = self._current_fan_mode
-				swing_mode = self._current_swing_mode
-				target_temperature = '{0:g}'.format(self._target_temperature)
-				light_status = "light_on" if self._is_light_on else "light_off"
+        async with self._temp_lock:
+            try:
+                self._on_by_remote = False
+                operation_mode = self._hvac_mode
+                fan_mode = self._current_fan_mode
+                swing_mode = self._current_swing_mode
+                target_temperature = '{0:g}'.format(self._target_temperature)
+                light_status = "light_on" if self._is_light_on else "light_off"
 
-				# Отдельная отправка команды OFF
-				if operation_mode.lower() == HVACMode.OFF:
-					await self._controller.send(self._commands['off'])
-					return
+				 # Отделяем специальную обработку OFF-команды
+                if operation_mode.lower() == HVACMode.OFF:
+                    await self._controller.send(self._commands['off'])
+                    return
 
 				# Посыл отдельной команды ON, если существует
 				if 'on' in self._commands:
 					await self._controller.send(self._commands['on'])
 					await asyncio.sleep(self._delay)
+                    
+                 # Обработка основной команды
+                key_base = f"{operation_mode}/{fan_mode}/{target_temperature}"
+                final_command_key = f"{key_base}/{light_status}"
+                
+                if self._support_swing:
+                final_command_key += f"/{swing_mode}"
 
-				# Основной выбор команды с учетом подсветки
-				key_base = f"{operation_mode}/{fan_mode}/{target_temperature}"
-				full_command_key = f"{key_base}/{light_status}"
+                # Отправляем итоговую команду
+                await self._controller.send(self._commands[final_command_key])
 
-				# Выбор конкретной команды с учетом support_swing
-				if self._support_swing:
-					final_command_key = f"{key_base}/{swing_mode}/{light_status}"
-				else:
-					final_command_key = full_command_key
-
-				# Отправляем итоговую команду
-				await self._controller.send(self._commands[final_command_key])
-
-			except KeyError:
-				_LOGGER.error(f"Ошибка: ключ команды `{final_command_key}` не найден!")
-			except Exception as e:
-				_LOGGER.exception(e)
+            except KeyError:
+                _LOGGER.error(f"Ошибка: Команда `{final_command_key}` не найдена!")
+            except Exception as e:
+                _LOGGER.exception(f"Произошла ошибка при отправке команды: {e}")
                 
     @callback
     async def _async_temp_sensor_changed(self, event: Event[EventStateChangedData]) -> None:
