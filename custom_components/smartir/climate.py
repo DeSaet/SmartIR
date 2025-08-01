@@ -38,7 +38,7 @@ SUPPORT_FLAGS = (
     ClimateEntityFeature.TURN_ON |
     ClimateEntityFeature.TARGET_TEMPERATURE |
     ClimateEntityFeature.FAN_MODE |
-	ClimateEntityFeature.LIGHT
+    ClimateEntityFeature.LIGHT
 )
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
@@ -51,7 +51,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_HUMIDITY_SENSOR): cv.entity_id,
     vol.Optional(CONF_POWER_SENSOR): cv.entity_id,
     vol.Optional(CONF_POWER_SENSOR_RESTORE_STATE, default=False): cv.boolean,
-	vol.Optional(CONF_LIGHT_SUPPORT, default=True): cv.boolean
+    vol.Optional(CONF_LIGHT_SUPPORT, default=True): cv.boolean
 })
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -111,7 +111,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
         self._humidity_sensor = config.get(CONF_HUMIDITY_SENSOR)
         self._power_sensor = config.get(CONF_POWER_SENSOR)
         self._power_sensor_restore_state = config.get(CONF_POWER_SENSOR_RESTORE_STATE)
-		self._light_support = config.get(CONF_LIGHT_SUPPORT)
+        self._light_support = config.get(CONF_LIGHT_SUPPORT)
 
         self._manufacturer = device_data['manufacturer']
         self._supported_models = device_data['supportedModels']
@@ -378,16 +378,16 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
                     return
 
 				# Посыл отдельной команды ON, если существует
-				if 'on' in self._commands:
-					await self._controller.send(self._commands['on'])
-					await asyncio.sleep(self._delay)
+                    if 'on' in self._commands:
+                        await self._controller.send(self._commands['on'])
+                        await asyncio.sleep(self._delay)
                     
                  # Обработка основной команды
                 key_base = f"{operation_mode}/{fan_mode}/{target_temperature}"
                 final_command_key = f"{key_base}/{light_status}"
                 
                 if self._support_swing:
-                final_command_key += f"/{swing_mode}"
+                    final_command_key += f"/{swing_mode}"
 
                 # Отправляем итоговую команду
                 await self._controller.send(self._commands[final_command_key])
