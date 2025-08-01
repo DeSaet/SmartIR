@@ -21,11 +21,11 @@ _LOGGER = logging.getLogger(__name__)
 DOMAIN = 'smartir'
 VERSION = '1.18.1'
 MANIFEST_URL = (
-    #"https://raw.githubusercontent.com/"
+    "https://raw.githubusercontent.com/"
     "DeSaet/SmartIR/{}/"
     "custom_components/smartir/manifest.json")
 REMOTE_BASE_URL = (
-    #"https://raw.githubusercontent.com/"
+    "https://raw.githubusercontent.com/"
     "DeSaet/SmartIR/{}/"
     "custom_components/smartir/")
 COMPONENT_ABS_DIR = os.path.dirname(
