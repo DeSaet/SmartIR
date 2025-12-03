@@ -367,24 +367,28 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
                 fan_mode = self._current_fan_mode
                 swing_mode = self._current_swing_mode
                 target_temperature = '{0:g}'.format(self._target_temperature)
-
+                
+                # Получаем текущее состояние подсветки из переключателя
+                light_status = hass.states.get("input_boolean.haier_light_status").state
+                
                 if operation_mode.lower() == HVACMode.OFF:
                     await self._controller.send(self._commands['off'])
                     return
-
+    
                 if 'on' in self._commands:
                     await self._controller.send(self._commands['on'])
                     await asyncio.sleep(self._delay)
-
+    
                 if self._support_swing == True:
                     await self._controller.send(
-                        self._commands[operation_mode][fan_mode][swing_mode][target_temperature])
+                        self._commands[operation_mode][fan_mode][swing_mode][target_temperature][light_status]
+                    )
                 else:
                     await self._controller.send(
-                        self._commands[operation_mode][fan_mode][target_temperature])
-
+                        self._commands[operation_mode][fan_mode][target_temperature][light_status]
+                    )
             except Exception as e:
-                _LOGGER.exception(e)
+                _LOGGER.error(f"Ошибка при отправке команды: {e}")
                 
     @callback
     async def _async_temp_sensor_changed(self, event: Event[EventStateChangedData]) -> None:
